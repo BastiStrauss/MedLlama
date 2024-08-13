@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "medllama"
+version = "0.1.0"
+description = "A webinterface to answer medical questions using a fine-tuned version of Llama 3 by META"
+authors = ["Sebastian Strauß <sstrauss@uni-muenster.de>"]
+readme = "README.md"
+
+packages = [
+    {include = "medllama"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+streamlit ="1.35"
+torch = "^2.2.1"
+#streamlit_extras = "^0.4"
+#streamlit-chat
+
+#[tool.poetry.group.dev.dependencies]
+#black = "^24.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
