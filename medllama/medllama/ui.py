@@ -1,16 +1,9 @@
 import streamlit as st
 import time
 import random
-import webbrowser
 from PIL import Image
 
 def main():
-    # Delay to allow the Streamlit server to start
-    time.sleep(5)
-    
-    # Open the web browser to the Streamlit app URL
-    webbrowser.open("http://localhost:8501")
-
     st.set_page_config(page_title="Medical Bot - A fine-tuned Llama 3 to answer medical questions")
 
     # Load and display the logo

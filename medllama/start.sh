@@ -13,4 +13,12 @@ while ! curl -s http://localhost:8501/ > /dev/null; do
 done
 
 # Open the web browser
-xdg-open http://localhost:8501 || open http://localhost:8501 || start http://localhost:8501
+if command -v xdg-open > /dev/null; then
+  xdg-open http://localhost:8501
+elif command -v open > /dev/null; then
+  open http://localhost:8501
+elif command -v start > /dev/null; then
+  start http://localhost:8501
+else
+  echo "Could not detect the web browser command to open the URL. Please open it manually: http://localhost:8501"
+fi
