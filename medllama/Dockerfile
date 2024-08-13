@@ -30,4 +30,4 @@ RUN poetry install
 EXPOSE 8501
 
 # Set the entrypoint to run the Streamlit app
-CMD ["streamlit", "run", "ui.py"]
+CMD ["streamlit", "run", "medllama/ui.py"]
