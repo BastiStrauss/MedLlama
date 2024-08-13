@@ -1,8 +1,8 @@
-# Medical Llama - A medical 
+# Medical Llama - A medical Q&A Bot
 This app is a fine-tuned Llama 3 powered chatbot that can be accessed by a webinterface. It is built to better answer medical inquiries. Always check answers for their correctness.
 
 ## Prerequists 
-Make sure Docker Desktop and Docker Compose is downloaded on your machine and running
+Make sure Docker Desktop and Docker Compose is downloaded on your machine and running.
 
 [Docker](https://www.docker.com/)
 
