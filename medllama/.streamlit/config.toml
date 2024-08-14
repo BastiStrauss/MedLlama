@@ -1,8 +1,8 @@
 [client]
-toolbarMode = "minimal" #"auto"
+toolbarMode = "auto" #"minimal"
 
 [ui]
-hideTopBar = true # false
+hideTopBar = false # false
 
 [theme]
 primaryColor="#006e89"

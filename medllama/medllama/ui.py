@@ -7,7 +7,7 @@ def main():
     st.set_page_config(page_title="Medical Bot - A fine-tuned Llama 3 to answer medical questions")
 
     # Load and display the logo
-    with Image.open("/app/assets/uni_ms.png") as logo:
+    with Image.open("/app/assets/uni_ms_logo2.png") as logo:
         st.image(logo)
 
     # Main title
@@ -75,21 +75,21 @@ def main():
         role = message["role"]
         content = message["content"]
         if role == "user":
-            with st.chat_message("user", avatar="🥸"):
+            with st.chat_message("user", avatar=":material/person:"):
                 st.markdown(content)
         elif role == "assistant":
-            with st.chat_message("assistant", avatar="🤖"):
+            with st.chat_message("assistant", avatar='/app/assets/uni_ms_logo.png'):
                 st.markdown(content)
 
     # Handle user input
     if prompt := st.chat_input("Ask your medical questions here"):
         st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user", avatar="🥸"):
+        with st.chat_message("user", avatar=":material/person:"):
             st.markdown(prompt)
 
         response = response_generator(prompt)
         st.session_state.messages.append({"role": "assistant", "content": response})
-        with st.chat_message("assistant", avatar="🤖"):
+        with st.chat_message("assistant", avatar='/app/assets/uni_ms_logo.png'):
             animate_text(response)
 
     # Display the initial message after one second if the message history is empty
@@ -97,7 +97,7 @@ def main():
         time.sleep(2)
         initial_message = "How can I help you with your medical questions?"
         st.session_state.messages.append({"role": "assistant", "content": initial_message})
-        with st.chat_message("assistant", avatar="🤖"):
+        with st.chat_message("assistant", avatar='/app/assets/uni_ms_logo.png'):
             animate_text(initial_message)
 
 if __name__ == "__main__":
