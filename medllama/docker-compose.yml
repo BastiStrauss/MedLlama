@@ -1,6 +1,14 @@
+version: '3.8'
 services:
   streamlit_app:
-    image: medllama-webinterface
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8501:8501"
+    # Optional: Adjust resource constraints
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '4.0'
+    #       memory: 16G

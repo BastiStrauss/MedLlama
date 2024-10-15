@@ -20,5 +20,5 @@ elif command -v open > /dev/null; then
 elif command -v start > /dev/null; then
   start http://localhost:8501
 else
-  echo "Could not detect the web browser command to open the URL. Please open it manually: http://localhost:8501"
+  echo "Please open the URL manually: http://localhost:8501"
 fi
