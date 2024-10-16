@@ -27,7 +27,7 @@ docker-compose down
 ```
 
 ## Copyright
-This work is done by Sebastian Strauß for a Bachelor Thesis at the University of Muenster. It is provided under the MIT license.
+This work is done by Sebastian Strauß for a Bachelor Thesis at the University of Muenster. It is provided under the Apache 2.0 license.
 
 [GitHub](https://github.com/BastiStrauss)
 

@@ -1,15 +1,15 @@
 import streamlit as st
 import time
-from PIL import Image
-from transformers import pipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 import torch
+from threading import Thread
+import accelerate
 
 def main():
     st.set_page_config(page_title="Medical Bot - A fine-tuned Llama 3 to answer medical questions")
 
-    # Load and display the logo
-    with Image.open("/app/assets/uni_ms_logo2.png") as logo:
-        st.image(logo)
+    # Load and display the logo (if needed)
+    st.image("/app/assets/uni_ms_logo2.png")
 
     # Main title
     custom_title_main = "<h2 style='color: #006e89;'>Medical Bot</h2>"
@@ -19,13 +19,6 @@ def main():
     with st.sidebar:
         custom_title_chathistory = "<h1 style='color: #006e89;'>Chat History</h1>"
         st.markdown(custom_title_chathistory, unsafe_allow_html=True)
-
-        if st.button('Chat History 1'):
-            st.session_state.selected_history = 'History 1'
-        if st.button('Chat History 2'):
-            st.session_state.selected_history = 'History 2'
-        if st.button('Chat History 3'):
-            st.session_state.selected_history = 'History 3'
 
         custom_title_about = "<h3 style='color: #006e89;'>About</h3>"
         st.markdown(custom_title_about, unsafe_allow_html=True)
@@ -48,41 +41,38 @@ def main():
 
     @st.cache_resource
     def load_model():
-        return pipeline(
-            'text-generation',
-            model='bastistrauss/MedicalLlama-3.1-8b',
-            tokenizer='bastistrauss/MedicalLlama-3.1-8b',
-            torch_dtype=torch.bfloat16,
-            device_map='auto',  # Use 'cuda' if you have a GPU
+        tokenizer = AutoTokenizer.from_pretrained(
+            'bastistrauss/MedicalLlama-3.1-8b',
             trust_remote_code=True
         )
+        model = AutoModelForCausalLM.from_pretrained(
+            'bastistrauss/MedicalLlama-3.1-8b',
+            torch_dtype=torch.bfloat16,
+            device_map='auto',
+            trust_remote_code=True
+        )
+        return model, tokenizer
 
     # Load the model
     with st.spinner('Loading model... This may take several minutes.'):
-        generator = load_model()
+        model, tokenizer = load_model()
 
-    # Function to generate a response using the model
-    def response_generator(user_input):
-        output = generator(
-            user_input,
-            max_length=512,
+    def response_generator(prompt):
+        input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(model.device)
+        streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+        generation_kwargs = dict(
+            input_ids=input_ids,
+            max_length=100,
             do_sample=True,
             temperature=0.7,
             num_return_sequences=1,
-            pad_token_id=generator.tokenizer.eos_token_id
+            streamer=streamer
         )
-        response = output[0]['generated_text']
-        return response
-
-    # Function to animate text
-    def animate_text(output):
-        text_container = st.empty()
-        display_text = ""
-        for i in range(len(output) + 1):
-            display_text = output[:i]
-            text_container.write(display_text)
-            time.sleep(0.05)
-        time.sleep(1)
+        thread = Thread(target=model.generate, kwargs=generation_kwargs)
+        thread.start()
+        generated_text = ""
+        for new_text in streamer:
+            yield new_text
 
     # Initialize session state messages
     if "messages" not in st.session_state:
@@ -105,11 +95,14 @@ def main():
         with st.chat_message("user", avatar=":material/person:"):
             st.markdown(prompt)
 
-        with st.spinner("Generating response..."):
-            response = response_generator(prompt)
-        st.session_state.messages.append({"role": "assistant", "content": response})
         with st.chat_message("assistant", avatar='/app/assets/uni_ms_logo.png'):
-            animate_text(response)
+            message_placeholder = st.empty()
+            generated_text = ""
+            for new_text in response_generator(prompt):
+                generated_text += new_text
+                message_placeholder.markdown(generated_text)
+                time.sleep(0.05)  # Adjust the sleep time as needed
+        st.session_state.messages.append({"role": "assistant", "content": generated_text})
 
     # Display the initial message if the message history is empty
     if len(st.session_state.messages) == 0:
@@ -117,7 +110,7 @@ def main():
         initial_message = "How can I help you with your medical questions?"
         st.session_state.messages.append({"role": "assistant", "content": initial_message})
         with st.chat_message("assistant", avatar='/app/assets/uni_ms_logo.png'):
-            animate_text(initial_message)
+            st.markdown(initial_message)
 
 if __name__ == "__main__":
     main()
