@@ -26,6 +26,19 @@ The webinterface can just be closed. To addtiontally shutdown the Docker contain
 docker-compose down
 ```
 
+## Running the application (2. Option)
+The application can be downloaded from Docker hub as well.
+
+### Downloading the image from Docker hub
+```bash
+docker pull sebastianstrauss/medllama-webinterface:latest
+```
+
+### Running the image
+```bash
+docker run -p 8501:8501 sebastianstrauss/medllama-webinterface:latest
+```
+
 ## Copyright
 This work is done by Sebastian Strauß for a Bachelor Thesis at the University of Muenster. It is provided under the Apache 2.0 license.
 
