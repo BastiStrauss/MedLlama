@@ -6,7 +6,7 @@ from threading import Thread
 import accelerate
 
 def main():
-    st.set_page_config(page_title="Medical Bot - A fine-tuned Llama 3 to answer medical questions")
+    st.set_page_config(page_title="Medical Bot - A fine-tuned Llama 3.1 to answer medical questions")
 
     # Load and display the logo (if needed)
     st.image("/app/assets/uni_ms_logo2.png")
@@ -17,14 +17,14 @@ def main():
 
     # Sidebar content
     with st.sidebar:
-        custom_title_chathistory = "<h1 style='color: #006e89;'>Chat History</h1>"
-        st.markdown(custom_title_chathistory, unsafe_allow_html=True)
+        #custom_title_chathistory = "<h1 style='color: #006e89;'>Chat History</h1>"
+        #st.markdown(custom_title_chathistory, unsafe_allow_html=True)
 
         custom_title_about = "<h3 style='color: #006e89;'>About</h3>"
         st.markdown(custom_title_about, unsafe_allow_html=True)
 
         st.markdown('''
-        This app is a fine-tuned Llama 3 powered chatbot built to better answer medical inquiries. 
+        This app is a fine-tuned Llama 3.1 powered chatbot built to better answer medical inquiries. 
         Always check answers for their correctness.
         ''')
 
@@ -42,11 +42,11 @@ def main():
     @st.cache_resource
     def load_model():
         tokenizer = AutoTokenizer.from_pretrained(
-            'bastistrauss/MedicalLlama-3.1-8b',
+            'bastistrauss/MedicalLlama-3.1-8b-52',
             trust_remote_code=True
         )
         model = AutoModelForCausalLM.from_pretrained(
-            'bastistrauss/MedicalLlama-3.1-8b',
+            'bastistrauss/MedicalLlama-3.1-8b-52',
             torch_dtype=torch.bfloat16,
             device_map='auto',
             trust_remote_code=True
@@ -62,7 +62,7 @@ def main():
         streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
         generation_kwargs = dict(
             input_ids=input_ids,
-            max_length=100,
+            max_length=500,
             do_sample=True,
             temperature=0.7,
             num_return_sequences=1,
