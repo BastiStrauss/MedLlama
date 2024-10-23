@@ -8,7 +8,7 @@ import accelerate
 def main():
     st.set_page_config(page_title="Medical Bot - A fine-tuned Llama 3.1 to answer medical questions")
 
-    # Load and display the logo (if needed)
+    # Load and display the logo
     st.image("/app/assets/uni_ms_logo2.png")
 
     # Main title
@@ -38,7 +38,8 @@ def main():
             <a href='https://www.uni-muenster.de/en/' target='_blank' style='color: #006e89;'>living.knowledge</a>
         </div>
         """, unsafe_allow_html=True)
-
+        
+    # Cache the model for faster inference
     @st.cache_resource
     def load_model():
         tokenizer = AutoTokenizer.from_pretrained(
@@ -101,7 +102,7 @@ def main():
             for new_text in response_generator(prompt):
                 generated_text += new_text
                 message_placeholder.markdown(generated_text)
-                time.sleep(0.05)  # Adjust the sleep time as needed
+                time.sleep(0.05)  # Sleep time to simulate typewriter
         st.session_state.messages.append({"role": "assistant", "content": generated_text})
 
     # Display the initial message if the message history is empty

@@ -1,4 +1,4 @@
-# Use the official Python 3.11 image as a base
+# Use Python 3.11 as base
 FROM python:3.11
 
 # Set environment variables for Poetry

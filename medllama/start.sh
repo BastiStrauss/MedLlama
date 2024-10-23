@@ -3,7 +3,7 @@
 # Start Docker Compose in detached mode
 docker-compose up --build -d
 
-# Wait for a few seconds to allow the application to start
+# Wait to allow the application to start
 sleep 10
 
 # Check if Streamlit is running and retry if not
